@@ -1,0 +1,14 @@
+# envrinment variables
+/.env
+/.env.local
+/.env.local.php
+/.env.*.local
+
+/vendor/
+
+/phpunit.xml
+.phpunit.result.cache
+
+/.idea/
+
+/node_modules/

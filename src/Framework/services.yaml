@@ -1,0 +1,55 @@
+services:
+  App\Framework\Database:
+    class: App\Framework\Database
+    arguments: ['%database_url%', '%database_driver%']
+
+  App\Framework\GetRemoteData:
+    class: App\Framework\GetRemoteData
+
+  App\Repository\ProductRepository:
+    class: App\Repository\ProductRepository
+    factory: ['@App\Framework\Database', getRepository]
+    arguments:
+      - App\Entity\Product
+
+  App\Repository\OrderRepository:
+    class: App\Repository\OrderRepository
+    factory: ['@App\Framework\Database', getRepository]
+    arguments:
+      - App\Entity\Order
+
+  App\Service\Transformer\ProductsTransformer:
+    class: App\Service\Transformer\ProductsTransformer
+
+  App\Service\Transformer\OrderTransformer:
+    class: App\Service\Transformer\OrderTransformer
+
+  App\Service\GenerateProducts:
+    class: App\Service\GenerateProducts
+    arguments: ['@App\Repository\ProductRepository']
+
+  App\Service\CreateOrder:
+    class: App\Service\CreateOrder
+    arguments: ['@App\Repository\OrderRepository', '@App\Repository\ProductRepository']
+
+  App\Service\RecalculateOrderSum:
+    class: App\Service\RecalculateOrderSum
+    arguments: ['@App\Repository\OrderRepository']
+
+  App\Service\PayOrder:
+    class: App\Service\PayOrder
+    arguments: ['@App\Repository\OrderRepository', '@App\Framework\GetRemoteData']
+
+  App\Service\GetAllProducts:
+    class: App\Service\GetAllProducts
+    arguments: ['@App\Repository\ProductRepository']
+
+  App\Controller\Api\ProductController:
+    class: App\Controller\Api\ProductController
+    tags: [controller.service_arguments]
+    arguments: ['@App\Service\GenerateProducts', '@App\Service\GetAllProducts', '@App\Service\Transformer\ProductsTransformer']
+
+  App\Controller\Api\OrderController:
+    class: App\Controller\Api\OrderController
+    tags: [controller.service_arguments]
+    arguments: ['@App\Service\CreateOrder', '@App\Service\RecalculateOrderSum', '@App\Service\PayOrder', '@App\Service\Transformer\OrderTransformer']
