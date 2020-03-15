@@ -34,20 +34,11 @@ class Order
     private $status;
 
     /**
-     * @var Product[]|Collection
+     * @var OrderProduct[]|Collection
      *
-     * @ORM\ManyToMany(targetEntity="Product", inversedBy="orders", cascade={"persist"})
-     * @ORM\JoinTable(
-     *     name="orders_products",
-     *     joinColumns={
-     *          @ORM\JoinColumn(name="order_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *          @ORM\JoinColumn(name="product_id", referencedColumnName="id")
-     *     }
-     * )
+     * @ORM\OneToMany(targetEntity="OrderProduct", mappedBy="order", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
-    private $products;
+    private $orderProducts;
 
     /**
      * @ORM\Column(type="money")
@@ -58,7 +49,7 @@ class Order
 
     public function __construct()
     {
-        $this->products = new ArrayCollection();
+        $this->orderProducts = new ArrayCollection();
         $this->status = static::STATUS_NEW;
         $this->sum = new Money(0, new Currency('RUB'));
     }
@@ -85,30 +76,23 @@ class Order
         return $this;
     }
 
-    public function setProducts(Collection $products): self
+    public function addOrderProduct(OrderProduct $orderProduct): self
     {
-        $this->products = $products;
-
-        return $this;
-    }
-
-    public function addProduct(Product $product): self
-    {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
+        if (!$this->orderProducts->contains($orderProduct)) {
+            $this->orderProducts[] = $orderProduct;
         }
 
         return $this;
     }
 
-    public function removeProduct(Product $product): bool
+    public function removeOrderProduct(OrderProduct $orderProduct): bool
     {
-        return $this->products->removeElement($product);
+        return $this->orderProducts->removeElement($orderProduct);
     }
 
-    public function getProducts(): Collection
+    public function getOrderProducts(): Collection
     {
-        return $this->products;
+        return $this->orderProducts;
     }
 
     public function getSum(): ?Money

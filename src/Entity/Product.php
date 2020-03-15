@@ -37,15 +37,15 @@ class Product
     private $price;
 
     /**
-     * @var Order[]|Collection
+     * @var OrderProduct[]|Collection
      *
-     * @ORM\ManyToMany(targetEntity="Order", mappedBy="products")
+     * @ORM\OneToMany(targetEntity="OrderProduct", mappedBy="product", cascade={"persist"})
      */
-    private $orders;
+    protected $productOrders;
 
     public function __construct()
     {
-        $this->orders = new ArrayCollection();
+        $this->productOrders = new ArrayCollection();
     }
 
     public function __toString()
@@ -82,22 +82,22 @@ class Product
         return $this;
     }
 
-    public function getOrders(): Collection
+    public function getProductOrders(): Collection
     {
-        return $this->orders;
+        return $this->productOrders;
     }
 
-    public function addOrder(Order $order): self
+    public function addProductOrder(OrderProduct $orderProduct): self
     {
-        if (!$this->orders->contains($order)) {
-            $this->orders[] = $order;
+        if (!$this->productOrders->contains($orderProduct)) {
+            $this->productOrders[] = $orderProduct;
         }
 
         return $this;
     }
 
-    public function removeOrder(Order $order): bool
+    public function removeProductOrder(OrderProduct $orderProduct): bool
     {
-        return $this->orders->removeElement($order);
+        return $this->productOrders->removeElement($orderProduct);
     }
 }

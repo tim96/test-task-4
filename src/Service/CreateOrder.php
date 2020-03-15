@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Order;
+use App\Entity\OrderProduct;
 use App\Entity\Product;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
@@ -38,9 +39,14 @@ class CreateOrder
 
         /** @var Product $product */
         foreach ($products as $product) {
-            $order->addProduct($product);
+            $orderProduct = new OrderProduct();
+            $orderProduct->setOrder($order);
+            $orderProduct->setProduct($product);
+            $orderProduct->setQuantity(1);
+            $orderProduct->setSum($product->getPrice()->multiply($orderProduct->getQuantity()));
 
-            $product->addOrder($order);
+            $order->addOrderProduct($orderProduct);
+            $product->addProductOrder($orderProduct);
         }
 
         $this->orderRepository->save($order);

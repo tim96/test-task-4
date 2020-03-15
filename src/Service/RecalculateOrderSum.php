@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Order;
-use App\Entity\Product;
+use App\Entity\OrderProduct;
 use App\Repository\OrderRepository;
 use Money\Currency;
 use Money\Money;
@@ -22,9 +22,10 @@ class RecalculateOrderSum
     {
         $total = new Money(0, new Currency('RUB'));
 
-        /** @var Product $product */
-        foreach ($order->getProducts()->toArray() as $product) {
-            $total = $total->add($product->getPrice());
+        /** @var OrderProduct[] $orderProducts */
+        $orderProducts = $order->getOrderProducts();
+        foreach ($orderProducts as $orderProduct) {
+            $total = $total->add($orderProduct->getSum());
         }
 
         $order->setSum($total);
