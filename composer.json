@@ -6,6 +6,11 @@
     "autoload": {
         "psr-4": {
             "App\\": "src/"
+        },
+        "autoload-dev": {
+            "psr-4": {
+                "App\\Tests\\": "tests/"
+            }
         }
     },
     "config": {
@@ -32,6 +37,7 @@
     },
     "require-dev": {
         "phpstan/phpstan": "^0.12.14",
+        "phpunit/phpunit": "^9.0",
         "squizlabs/php_codesniffer": "^3.5"
     },
     "extra": {
