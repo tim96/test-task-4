@@ -26,6 +26,7 @@ class RestApi extends HttpKernel
         $containerBuilder = new ContainerBuilder();
         $containerBuilder->setParameter('database_url', $_ENV['DATABASE_URL']);
         $containerBuilder->setParameter('database_driver', $_ENV['DATABASE_DRIVER']);
+        $containerBuilder->setParameter('project_dir', __DIR__ . '/../../');
 
         $loader = new YamlFileLoader($containerBuilder, new FileLocator(__DIR__));
         $loader->load('services.yaml');
